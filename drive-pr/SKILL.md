@@ -7,8 +7,9 @@ description: Drive a change from local commit to a merge-ready GitHub PR - open 
 
 # Ship a PR
 
-1. Check the diff against every reviewer in `~/.claude/skills/crucible/reviewers/` with `enabled: true`, and fix
-   what it would find.
+1. Check the diff against every reviewer in `~/.claude/skills/crucible/reviewers/` with `enabled: true`. Fix what it
+   would find with the fix its reviewer asks for, and check each fix against every reviewer again. A finding with no
+   such fix is not one to work around: list it for the user and leave it unfixed.
 2. Push the branch as `<author>/<branch>` and open the PR as a draft (`gh pr create --draft --fill`). Gemini Code
    Assist starts reviewing automatically when the PR is opened.
 3. Iterate on Gemini's comments until each is fixed or dismissed. Request another round with a `/gemini review` PR
