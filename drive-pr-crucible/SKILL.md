@@ -13,10 +13,13 @@ not to step 1.
 
 ## Crucible phase
 
-1. Run crucible in the background, from the repo's root, so its exit notifies you:
-   `claude -p "/crucible <n>" --dangerously-skip-permissions > <scratchpad>/crucible-<n>-<k>.log 2>&1`
-   with `run_in_background`, where `<k>` counts the runs. Never push to the PR's branch while it runs: crucible posts
-   nothing when the head moves during a run.
+1. Run crucible in the background, from the repo's root, wrapped so you are notified when its review is posted, not
+   only when the process exits: `claude -p` can stay alive after posting. Start
+   `claude -p "/crucible <n>" --dangerously-skip-permissions > <scratchpad>/crucible-<n>-<k>.log 2>&1 &` and, in the
+   same `run_in_background` command, loop every 30s until the PR has a review on the head commit whose body ends with
+   `*crucible <run id> · posted automatically*`, or the process has exited. If the review appeared first, wait a minute
+   and stop the process. `<k>` counts the runs. Never push to the PR's branch while it runs: crucible posts nothing
+   when the head moves during a run.
 2. When it exits, read the newest review on the PR whose body ends with `*crucible <run id> · posted automatically*`
    and whose `commit_id` is the head, and its finding comments. If there is none, read the log, tell the user why the
    run posted nothing, and stop.
